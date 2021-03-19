@@ -77,36 +77,38 @@
                 warningT.style.display = 'block';
             } else if (passwordi.length < 6 || passwordi.length > 20) {
                 // Check password validity.
-                warningBox.innerHTML = 'The password should between 6-20 characters!';
-                warningBox.style.display = 'block';
+                warningT.innerHTML = 'The password should between 6-20 characters!';
+                warningT.style.display = 'block';
             } else {
                 // Client side check completed.
-                registerB.innerHTML = 'Registering...';
-                registerB.setAttribute('disabled', '');
+                register.innerHTML = 'Registering...';
+                register.setAttribute('disabled', '');
 
                 var postBody = JSON.stringify({
                     username: usernamei,
-                    isAdmin: 1,
+                    verified: 1,
                     password: passwordi,
                     email: emaili
                 });
 
                 // POST to the server.
                 $.post(serverAddr + '/register', postBody, function(data, status) {
+                    //implement verification email here!
+                    
                     
                     alert('Registration Succeeded! Please verify account through your email!');
                     window.location.href = 'index.html';
                 }).fail(function(xhr, status, error) {
                     if (xhr.responseText != '') {
-                        warningBox.innerHTML = 'Registration failed: ' + JSON.parse(xhr.responseText)['error'] + '.';
-                        warningBox.style.display = 'block';
+                        warningT.innerHTML = 'Registration failed: ' + JSON.parse(xhr.responseText)['error'] + '.';
+                        warningT.style.display = 'block';
                     } else {
-                        warningBox.innerHTML = 'Registration failed with unknown reason, please try again!';
-                        warningBox.style.display = 'block';
+                        warningT.innerHTML = 'Registration failed with unknown reason, please try again!';
+                        warningT.style.display = 'block';
                     }
             
-                    registerBtn.innerHTML = 'Register';
-                    registerBtn.removeAttribute('disabled');
+                    register.innerHTML = 'Register';
+                    register.removeAttribute('disabled');
                 });
                 }
 
