@@ -46,6 +46,7 @@
     <script src="func.js"></script>
 
     <script>
+        <script language = "Javascript">
         pingServer();
         checkLogin(function() {
         alert('You are currently logged in!');
@@ -55,60 +56,61 @@
         var register = document.getElementById('registerb');
         
         register.onclick = function() {
-            var warningBox = document.getElementById('alert');
+            var warningT = document.getElementById('alert');
             var usernamei = document.getElementById('username').value;
             var emaili = document.getElementById('email').value;
             var passwordi = document.getElementById('password').value;
             var cpasswordi = document.getElementById('cpassword').value;
     
-    if (usernamei.length < 6 || usernamei.length > 20) {
-        // Check username validity.
-        warningBox.innerHTML = 'The username should be 6-20 characters!';
-        warningBox.style.display = 'block';
-    } else if (! (/^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,3})+$/.test(emailText))) {
-        // Check email validity.
-        warningBox.innerHTML = 'The email format is incorrect!';
-        warningBox.style.display = 'block';
-        return;
-    } else if (passwordText !== confirmPasswordText) {
-        // Check confirmed password match.
-        warningBox.innerHTML = 'The confirmed password does not match!';
-        warningBox.style.display = 'block';
-    } else if (passwordText.length < 6 || passwordText.length > 20) {
-        // Check password validity.
-        warningBox.innerHTML = 'The password should be 6-20 characters!';
-        warningBox.style.display = 'block';
-    } else {
-        // Client side check completed.
-        registerBtn.innerHTML = 'Registering...';
-        registerBtn.setAttribute('disabled', '');
-
-        var postBody = JSON.stringify({
-            username: usernameText,
-            isAdmin: 1,
-            password: passwordText,
-            email: emailText
-        });
-
-        // POST to the server.
-        $.post(serverAddr + '/register', postBody, function(data, status) {
-            alert('Registration Succeeded! Please log in!');
-            window.location.href = 'admin_login.html';
-        }).fail(function(xhr, status, error) {
-            if (xhr.responseText != '') {
-                warningBox.innerHTML = 'Registration failed: ' + JSON.parse(xhr.responseText)['error'] + '.';
+            if (usernamei.length < 6 || usernamei.length > 20) {
+                //checking username structure.
+                warningT.innerHTML = 'The username should between 6-20 characters!';
+                warningT.style.display = 'block';
+            } else if (! (/^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,3})+$/.test(emaili))) {
+                // Check if valid email.
+                warningT.innerHTML = 'The email format is incorrect!';
+                warningT.style.display = 'block';
+                return;
+            } else if (passwordi !== cpasswordi) {
+                // Check password match.
+                warningT.innerHTML = 'The confirmed password does not match!';
+                warningT.style.display = 'block';
+            } else if (passwordi.length < 6 || passwordi.length > 20) {
+                // Check password validity.
+                warningBox.innerHTML = 'The password should between 6-20 characters!';
                 warningBox.style.display = 'block';
             } else {
-                warningBox.innerHTML = 'Registration failed with unknown reason, please try again!';
-                warningBox.style.display = 'block';
-            }
-            
-            registerBtn.innerHTML = 'Register';
-            registerBtn.removeAttribute('disabled');
-        });
-    }
+                // Client side check completed.
+                registerB.innerHTML = 'Registering...';
+                registerB.setAttribute('disabled', '');
 
-};
+                var postBody = JSON.stringify({
+                    username: usernamei,
+                    isAdmin: 1,
+                    password: passwordi,
+                    email: emaili
+                });
+
+                // POST to the server.
+                $.post(serverAddr + '/register', postBody, function(data, status) {
+                    
+                    alert('Registration Succeeded! Please verify account through your email!');
+                    window.location.href = 'index.html';
+                }).fail(function(xhr, status, error) {
+                    if (xhr.responseText != '') {
+                        warningBox.innerHTML = 'Registration failed: ' + JSON.parse(xhr.responseText)['error'] + '.';
+                        warningBox.style.display = 'block';
+                    } else {
+                        warningBox.innerHTML = 'Registration failed with unknown reason, please try again!';
+                        warningBox.style.display = 'block';
+                    }
+            
+                    registerBtn.innerHTML = 'Register';
+                    registerBtn.removeAttribute('disabled');
+                });
+                }
+
+                };
    
     </script>
     </body>
