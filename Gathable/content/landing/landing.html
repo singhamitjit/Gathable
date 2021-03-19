@@ -1,0 +1,78 @@
+<!doctype html>
+<html lang="en">
+    <head>
+        <title>Gathable</title>
+        <link rel="icon" href="/asset/icon.svg">
+        
+        <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.0-beta1/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-giJF6kkoqNQ00vy+HMDP7azOuL0xtbfIcaT9wjKHr8RbDVddVHyTfAAsrekwKmP1" crossorigin="anonymous">
+        <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.0-beta2/dist/js/bootstrap.bundle.min.js" integrity="sha384-b5kHyXgcpbZJO/tY9Ul7kGkf1S0CWuKcCD38l8YkeH8z8QjE0GmW1gYU5S9FOnJ0" crossorigin="anonymous"></script>
+    
+    </head>
+    <body>
+        <header class="sticky-top">
+            <nav class="navbar navbar-expand-lg navbar-dark" style="background-color: #2c2c2c;">
+               <div class="container-fluid">
+                   <a class="navbar-brand" herf="#">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="currentColor" class="bi bi-calendar4-range" viewBox="0 0 16 16">
+                        <path d="M3.5 0a.5.5 0 0 1 .5.5V1h8V.5a.5.5 0 0 1 1 0V1h1a2 2 0 0 1 2 2v11a2 2 0 0 1-2 2H2a2 2 0 0 1-2-2V3a2 2 0 0 1 2-2h1V.5a.5.5 0 0 1 .5-.5zM2 2a1 1 0 0 0-1 1v1h14V3a1 1 0 0 0-1-1H2zm13 3H1v9a1 1 0 0 0 1 1h12a1 1 0 0 0 1-1V5z"/>
+                        <path d="M9 7.5a.5.5 0 0 1 .5-.5H15v2H9.5a.5.5 0 0 1-.5-.5v-1zm-2 3v1a.5.5 0 0 1-.5.5H1v-2h5.5a.5.5 0 0 1 .5.5z"/>
+                      </svg>
+                      Gathable
+                    </a>
+                    <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarToggler" aria-controls="navbarToggler" aria-expanded="false" aria-label="Toggle navigation">
+                        <span class="navbar-toggler-icon"></span>
+                    </button>
+                    <div class="collapse navbar-collapse" id="navbarToggler">
+                        <ul class="navbar-nav me-auto mb-2 mb-lg-0">
+                            <li class="nav-item"><a class="nav-link active" aria-current="page" href="#">Home</a></li>
+                            <li class="nav-item"><a class="nav-link" href="#about">About</a></li>
+                            <li class="nav-item"><a class="nav-link" href="#feature">Features</a></li>
+                            <li class="nav-item"><a class="nav-link" href="#more" tabindex="-1" aria-disabled="true">More</a></li>
+                        </ul>
+                        <a href="login" target="_blank"><button type="button" class="btn btn-outline-success me-2">Sign in</button></a>                        
+                        <a href="register" target="_blank"><button type="button" class="btn btn-outline-light me-2">Register</button></a>
+                    </div>
+               </div>
+            </nav>
+        </header>
+        
+        <div class="position-relative overflow-hidden mx-auto p-1 p-md-5 p-lg-5 text-left text-dark" style="background-image:linear-gradient(to bottom, rgba(255,255,255,0.9) 0%,rgba(255,255,255,0.2) 100%),url('landing/landing_img.jpg');background-position: 0% 80%;background-size:cover;height: 35em;">
+            <div class="col-md-5 p-4 p md-4 p-lg-4 my-5">
+              <h1 class="display-5 fw-normal">Gathable</h1>
+              <p class="lead fw-normal">A painless way for you to have gatherings with your friends together</p>
+              <a class="btn btn-primary btn-lg" style="border-radius: 24px;" href="register" target="_blank">Start using now!</a>
+              <p class="small">Already have an account? <a href="login" target="_blank">Sign in</a></p>
+            </div>
+        </div>
+
+        <div class="container">
+            <div class="row">
+            <br id="about">   
+            <section class="p-3 p-md-3 p-lg-3 my-5">	
+                <img src="landing/landing_img.jpg" alt="landing" class="rounded img-thumbnail" style="max-width: 50%; height: auto;float:right;">
+                <h1 class="display-5 fw-normal">About Gathable</h1>
+                <p class="lead fw-normal">Coming Soon...</p> 
+            </section>
+            <hr id="feature">
+            <section class="p-3 p-md-3 p-lg-3 my-5 text-end">	
+                <img src="landing/landing_img.jpg" alt="landing" class="rounded img-thumbnail" style="max-width: 50%; height: auto;float:left;">		
+                <h1 class="display-5 fw-normal">Features of Gathable</h1>
+                <p class="lead fw-normal">
+                Coming Soon...
+                </p>
+            </section>	
+            <hr id="more">
+            <section class="p-3 p-md-3 p-lg-3 my-5">
+                <img src="landing/landing_img.jpg" alt="landing" class="rounded img-thumbnail" style="max-width: 50%; height: auto;float:right;">
+                <h1 class="display-5 fw-normal">What more</h1>
+                <p class="lead fw-normal">
+                Coming Soon...
+                </p>
+            </section>
+            </div>
+        </div>
+        <footer class="text-end text-light p-2 mt-sm-3" style="background-color: #2c2c2c;">
+                This website was updated on <time>2021-03-17</time>. <b>&copy; Gathable</b>
+        </footer>
+    </body>
+</html>
