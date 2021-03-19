@@ -39,5 +39,16 @@
       <footer class="text-end text-light p-2 mt-5" style="background-color: #2c2c2c;">
         This website was updated on <time>2021-03-18</time>. <b>&copy; Gathable</b>
       </footer>
+        
+    <script src="func.js"></script>
+
+    <script>
+        pingServer();
+        checkLogin(function() {
+        alert('You are currently logged in!');
+        window.location.href = "index.html";
+        });
+
+    </script>
     </body>
 </html>
