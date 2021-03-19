@@ -83,19 +83,19 @@
                 // Client side check completed.
                 register.innerHTML = 'Registering...';
                 register.setAttribute('disabled', '');
+                
+                var rc =
 
-                var postBody = JSON.stringify({
+                var userinfo = JSON.stringify({
                     username: usernamei,
                     verified: 1,
+                    register_code = rc
                     password: passwordi,
                     email: emaili
                 });
 
                 // POST to the server.
-                $.post(serverAddr + '/register', postBody, function(data, status) {
-                    //implement verification email here!
-                    
-                    
+                $.post(serverAddr + '/register', userinfo, function(data, status) {
                     alert('Registration Succeeded! Please verify account through your email!');
                     window.location.href = 'index.html';
                 }).fail(function(xhr, status, error) {
