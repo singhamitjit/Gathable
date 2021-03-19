@@ -19,12 +19,15 @@
       
       <form style="width: 100%;max-width: 450px;padding:40px 60px;margin: auto;border-radius: 40px;background-color:rgba(255, 255, 255, 0.8);">
         <h2 class="text-center mb-2 fw-normal">Sign in</h2>
+          
+        <div id="alert" class="alert alert-danger mt-2 mb-3" role="alert" style="display:none;"></div>
+          
         <label for="userId" class="mb-3">User ID</label>
         <input id="userId" class="form-control mb-3" placeholder="User ID" required>
         <label for="password" class="mb-3">Password</label>
         <input type="password" id="password" class="form-control mb-3" placeholder="Password" required>
         <div class="d-flex justify-content-center mb-3">
-        <button class="btn btn-lg btn-success">Sign in</button>
+        <button class="btn btn-lg btn-success" id="loginb" >Sign in</button>
         </div>
         <p class="small text-center"><a href="#">Forgot password?</a></p>
         <p class="small text-center">Don't have an account yet? <a href="./register.html">Register</a> here</p>
@@ -33,5 +36,67 @@
       <footer class="text-end text-light p-2 mt-sm-3" style="background-color: #2c2c2c;">
         This website was updated on <time>2021-03-18</time>. <b>&copy; Gathable</b>
       </footer>
+        
+        
+        <script src="func.js"></script>
+
+        <script>
+        <script language = "Javascript">
+        checkLogin(function() {
+            alert('Already logged in!!);
+            window.location.href = "index.html";
+        });
+
+        var login = document.getElementById('loginb');
+
+        login.onclick = function() {
+            var warningBox = document.getElementById('alert');
+            var usernamei = document.getElementById('userID').value;
+            var passwordi = document.getElementById('password').value;
+
+            if (usernamei.length == 0) {
+                // Check username field empty.
+                warningBox.innerHTML = 'Username is empty!';
+                warningBox.style.display = 'block';
+            } else if (passwordText.length == 0) {
+                // Check password field empty.
+                warningBox.innerHTML = 'Password is required!';
+                warningBox.style.display = 'block';
+            } else {
+                // Client side check completed.
+                login.innerHTML = 'Logging in...';
+                login.setAttribute('disabled', '');
+
+                var logininfo = JSON.stringify({
+                    username: usernamei,
+                    password: passwordi
+                });
+    
+                // POST to the server.
+                $.post(serverAddr + '/login', logininfo, function(data, status, xhr) {
+                    // Set the cookies.
+                    setCookie('uid', JSON.parse(xhr.responseText)['uid']);
+                    setCookie('username', usernamei);
+            
+                    alert('Logged in as user: ' + usernamei + '!');
+                    window.location.href = 'index.html';
+                }).fail(function(xhr, status, error) {
+                    if (xhr.responseText != '') {
+                        warningBox.innerHTML = 'Log in failed: ' + JSON.parse(xhr.responseText)['error'] + '.';
+                        warningBox.style.display = 'block';
+                    } else {
+                        warningBox.innerHTML = 'Log in failed with unknown reason, please try again!';
+                        warningBox.style.display = 'block';
+                    }
+    
+                    loginBtn.innerHTML = 'Log In';
+                    loginBtn.removeAttribute('disabled');
+                });
+            }
+
+        };
+        
+        
+        
     </body>
 </html>
