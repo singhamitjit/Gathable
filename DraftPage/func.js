@@ -30,34 +30,14 @@ function logoutUser() {
   $.post(serverAddr + '/logout', postBody);
 
   setCookie('username', '', -1);
-  setCookie('api_token', '', -1);
-}
-
-function pingServer(success = undefined) {
-  // Check if the backend is on.
-  $.get(serverAddr + "/ping", function() {
-      if (success) success();
-  }).fail(function() {
-      alert('Server connection failed');
-      window.location.href = 'index.html';
-  });
+  setCookie('uid', '', -1);
 }
 
 function checkLogin(success = undefined) {
   // Check if the user is logged in.
   var username = getCookie('username');
   if (username != '') {
-      // Hide "Login / Register" Button.
-      document.getElementById('login-register').style.display = "none";
-      document.getElementById('logout-btn').onclick = function() {
-          alert('logged out!');
-          logoutUser();
-          window.location.href = 'index.html';
-      };
-  
-      // Account
       document.getElementById('account').innerHTML = 'User: ' + username;
-
       if (success) success(username);
   } else {
       document.getElementById('logout').style.display = "none";
