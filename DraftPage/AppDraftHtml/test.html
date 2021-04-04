@@ -1,0 +1,50 @@
+<!doctype html>
+<html lang="en">
+    <head>
+        <title>Gathable</title>
+        <link rel="icon" href="icon.svg">
+        <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.0-beta1/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-giJF6kkoqNQ00vy+HMDP7azOuL0xtbfIcaT9wjKHr8RbDVddVHyTfAAsrekwKmP1" crossorigin="anonymous">
+        <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.0-beta2/dist/js/bootstrap.bundle.min.js" integrity="sha384-b5kHyXgcpbZJO/tY9Ul7kGkf1S0CWuKcCD38l8YkeH8z8QjE0GmW1gYU5S9FOnJ0" crossorigin="anonymous"></script>
+        <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.4.0/font/bootstrap-icons.css">
+    
+    </head>
+    <body>
+        <header>  
+            <nav class="navbar navbar-expand-lg navbar-dark" style="background-color: #2c2c2c;">
+                <div class="container-fluid">
+                    <a class="navbar-brand" herf="#">
+                    <i class="bi bi-calendar-range"></i>
+                       Gathable
+                     </a>
+                    <button type="button" class="btn btn-outline-danger me-2">Log out</button>    
+                </div>               
+            </nav>
+            <nav class="navbar navbar-expand-lg navbar-light bg-light">
+                <div>
+                <ul class="navbar-nav">
+                    <li class="nav-item"><a href="#" class="nav-link">Home</a></li>
+                    <li class="nav-item"><a href="#" class="nav-link">Profile</a></li>
+                    <li class="nav-item"><a href="./timetable.html" class="nav-link">My Timetable</a></li>
+                    <li class="nav-item"><a href="./test.html" class="nav-link">Test</a></li>
+                </ul>
+                <div>
+            </nav>
+          </header> 
+        <form>
+            <label for="startDateTime">Start at:</label>
+            <input id="startDateTime" class="form-control mb-3" type="datetime-local"></input>
+            <button type="button" onclick="test()">test</button>
+          </form>
+    </body>
+    <script>
+        function test() {
+        var date = document.getElementById("startDateTime").value.split("T");
+        var date1 = date[0];
+        var time = date[1];
+        var date2 = document.getElementById("startDateTime").value;
+        alert(date2);
+        alert(date1);
+        alert(time);
+      }
+    </script>    
+</html>
