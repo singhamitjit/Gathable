@@ -56,7 +56,7 @@ for (i = 0; i < groupinfos.length; i++) {
 
     var bt = document.createElement('a');
 	bt.className = "list-group-item list-group-item-action";
-	bt.setAttribute( "href", "./home.html")
+	bt.setAttribute( "href", "./group_tb.html")
 
     bt.appendChild(Div);
 
