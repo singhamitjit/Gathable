@@ -2,7 +2,6 @@
 
 <h2>Starting the docker environment</h2>
 <ol>
-	<li>Clone this repository</li>
 	<li>
 		Run <code>docker-compose up</code>
 	</li>
