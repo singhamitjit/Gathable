@@ -7,6 +7,6 @@
 		Run <code>docker-compose up</code>
 	</li>
 	<li>
-		Access <code>localhost:3000</code> to the webpage
+		Access <code>localhost:3001</code> to the webpage
 	</li>
 </ol>
