@@ -16,4 +16,12 @@ app.post('/', (req, res) => {
 
 })
 
+
+
+app.get('/verify/:hash', async(req,res) => {
+	const { hash } = req.params
+}
+
+
+
 app.listen(PORT)
