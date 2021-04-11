@@ -1,3 +1,13 @@
+var nodemailer = require('nodemailer');
+
+var transporter = nodemailer.createTransport({
+  service: 'gmail',
+  auth: {
+    user: 'gathable@gmail.com',
+    pass: 'asdfg1234qwerty'
+  }
+});
+
 // check whether the received hash string is really a hash value
 function checkPasswordHash(hash) {
     var hashFormat = /[0-9a-f]{64}/
@@ -13,6 +23,22 @@ function randomHash() {
     return hashObj.getHash("HEX")   // return hash value as a hexadecimal string
 }
 
-function newUserEmail(username, email, hash) {}     // TODO: send verification email to new user
+function newUserEmail(username, email, hash) {
+	var mailOptions = {
+	  from: 'gathable@gmail.com',
+	  to: email,
+	  subject: 'Gathable E-mail Verification',
+	  html: '<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.4.0/font/bootstrap-icons.css"><h1>Welcome to <a class="navbar-brand"><i class="bi bi-calendar-range"></i> Gathable</a></h1><h3>E-verification</h3><p>Click <a href=http://localhost3001/verify/${hash}> here</a> to verify your e-mail registered with us!</p><p>We hope you enjoy your experience with us!</p><p>Thanks.</p>'
+	};
+	
+	transporter.sendMail(mailOptions, function(error, info){
+	  if (error) {
+		console.log(error);
+	  } else {
+		console.log('Email sent');
+	  }
+	});
+		
+} // send verification email to new user
 
 module.exports = { checkPasswordHash, randomHash, newUserEmail }    // have to export like this
