@@ -1,15 +1,10 @@
 // get information for database
 
-/* standard groupinfo objeect {groupName: , creator: , members: , description: , gplink:}   
- */
-
-
-// var groupinfos = [] 
-
-
 //below is sample test
 
 //event list
+
+//testing data, not real data, structure may different
 var events = [{day: "Sunday", eventName: "Hello", start: "13:33", end: "15:11"}, 
               {day: "Monday", eventName: "World", start: "13:12", end: "14:11"}, 
               {day: "Tuesday", eventName: "I", start: "09:33", end: "15:01"},
