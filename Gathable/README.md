@@ -6,7 +6,8 @@ Gathable/: the project folder
 │   ├── function/: JavaScript files that contains functions which will be shared by different pages  
 │   ├── landing/: the landing page  
 │   ├── login/: the login page  
-│   └── register/: the register page  
+│   ├── register/: the register page
+│   └── ... and more
 ├── server.js: entry point of the server, contains client <--> server functions  
 ├── databaseFunc.js: server <--> database functions  
 └── serverUtil.js: server functions  
