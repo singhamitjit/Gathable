@@ -31,4 +31,14 @@ function checkEmail(email) {
     else return ""
 }
 
-module.exports = { checkUserId, checkEmail }    // have to export to nodeJS like this
+// if bad cookies detected
+function badCookies() {
+    // clear cookies
+    document.cookie = "username=" + userId + "; expires=Sat, 01 Jan 1970 00:00:00 UTC; path=/"
+    document.cookie = "pwhash=" + hash + "; expires=Sat, 01 Jan 1970 00:00:00 UTC; path=/"
+    // redirect back to login
+    window.location.href = "/login/"
+    return
+}
+
+module.exports = { checkUserId, checkPassword, checkEmail }    // have to export to nodeJS like this

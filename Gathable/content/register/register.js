@@ -61,8 +61,8 @@ function onsuccess(data) {
         alert(data.message)
     }
     else {
-        alert("Successful reg!")
-        // TODO: redirect to a success page and tell the user to check email
+        alert("Successful registration! Please check your email for account verification.")
+        window.location.href = "/login/"
     }
 }
 

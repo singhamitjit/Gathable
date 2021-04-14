@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.0-beta1/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-giJF6kkoqNQ00vy+HMDP7azOuL0xtbfIcaT9wjKHr8RbDVddVHyTfAAsrekwKmP1" crossorigin="anonymous">
+<title>Gathable</title>
+<link rel="icon" href="icon.svg">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.4.0/font/bootstrap-icons.css">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.0-beta2/dist/js/bootstrap.bundle.min.js" integrity="sha384-b5kHyXgcpbZJO/tY9Ul7kGkf1S0CWuKcCD38l8YkeH8z8QjE0GmW1gYU5S9FOnJ0" crossorigin="anonymous"></script>
+</head>
+<body>
+
+<nav class="navbar navbar-expand-lg navbar-dark bg-dark sticky-top">
+    <div class="container-fluid">
+        <a class="navbar-brand" href="#"><i class="bi bi-calendar-range"></i> Gathable</a>
+        <div class="navbar-nav dropdown">
+            <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false">Menu</a>
+            <ul class="dropdown-menu dropdown-menu-end dropdown-menu-dark position-absolute" aria-labelledby="navbarDropdown">
+              <li><a class="dropdown-item" href="./home.html">Home</a></li>
+              <li><a class="dropdown-item" href="./profile.html">Profile</a></li>
+              <li><a class="dropdown-item" href="./timetable.html">My Timetable</a></li>
+              <li><a class="dropdown-item bg-secondary" href="#">My Groups</a></li>
+              <li><hr class="dropdown-divider"></li>
+              <li><a class="dropdown-item" href="#">Log out</a></li>
+            </ul>
+        </div>
+    </div>>        
+</nav>
+<div class="container p-3">	  
+    <h3><i class="bi bi-people-fill"></i> My Groups</h3>
+    <hr>
+    <a href="/create_group/"><button type="button" class="btn btn-primary">Create New Group</button></a>
+    <br>
+</div>    
+<div class="container p-3">
+    <small>You can click the group and see the group's timetable</small>
+    <div id="grouplist" class="list-group"></div>
+</div>
+
+<script src="groups.js"></script>
+</body>
+</html>

@@ -1,0 +1,63 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.0-beta1/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-giJF6kkoqNQ00vy+HMDP7azOuL0xtbfIcaT9wjKHr8RbDVddVHyTfAAsrekwKmP1" crossorigin="anonymous">
+<title>Gathable</title>
+<link rel="icon" href="icon.svg">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.4.0/font/bootstrap-icons.css">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.0-beta2/dist/js/bootstrap.bundle.min.js" integrity="sha384-b5kHyXgcpbZJO/tY9Ul7kGkf1S0CWuKcCD38l8YkeH8z8QjE0GmW1gYU5S9FOnJ0" crossorigin="anonymous"></script>
+</head>
+<body>
+
+<nav class="navbar navbar-expand-lg navbar-dark bg-dark sticky-top">
+    <div class="container-fluid">
+        <a class="navbar-brand" href="#"><i class="bi bi-calendar-range"></i> Gathable</a>
+        <div class="navbar-nav dropdown">
+            <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false">Menu</a>
+            <ul class="dropdown-menu dropdown-menu-end dropdown-menu-dark position-absolute" aria-labelledby="navbarDropdown">
+              <li><a class="dropdown-item bg-secondary" href="#">Home</a></li>
+              <li><a class="dropdown-item" href="./profile.html">Profile</a></li>
+              <li><a class="dropdown-item" href="./timetable.html">My Timetable</a></li>
+              <li><a class="dropdown-item" href="./my_groups.html">My Groups</a></li>
+              <li><hr class="dropdown-divider"></li>
+              <li><a class="dropdown-item" href="#">Log out</a></li>
+            </ul>
+        </div>
+    </div>>        
+</nav>
+<div class="container p-3">	  
+    <h3><i class="bi bi-house-fill"></i> Home</h3>
+    <hr>
+</div>    
+<div class="container p-3">
+    <div class="row">
+        <section id="wellcome" class="col-sm col-lg-6 col-xl-6 p-2 p-lg-3">
+            <h2>Hello, <span id="name"></span><h2>
+            <h4>Wellcome to Gathable!</h4> 
+            <br>
+            <p>What do you want to do?</p>
+            <div class="list-group" style="width: 70%">
+                <a href="/profile/" class="list-group-item list-group-item-action border-0"><i class="bi bi-arrow-right-circle"></i> Check my profile</a>
+                <a href="/timetable/" class="list-group-item list-group-item-action border-0"><i class="bi bi-arrow-right-circle"></i> Look at my timetable</a>
+                <a href="/groups/" class="list-group-item list-group-item-action border-0"><i class="bi bi-arrow-right-circle"></i> See the details of my groups</a>
+                <a href="/create_group/" class="list-group-item list-group-item-action border-0"><i class="bi bi-arrow-right-circle"></i> Create a new group</a>
+            </div>  
+        </section>
+        <section id="group" class="col-sm col-lg-6 col-xl-6 p-2 p-lg-3" onload= "groupLoad()">
+            <h2>Here are the groups you join</h2>
+            <small>More details? Click "Menu" <i class="bi bi-arrow-right"></i> "My Groups"</small>
+            <br>
+            <br>
+            <div id="grouplist" class="list-group"></div>
+            </div>  
+        </section>
+    </div>
+</div>
+
+<script src="home.js"></script>
+</body>
+</html>
