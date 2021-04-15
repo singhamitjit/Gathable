@@ -38,9 +38,6 @@ app.get('/register/', function (req, res) {
 app.get('/forgot/', function (req, res) {
     res.sendFile(__dirname + '/content/forgot/forgot.html');
 });
-app.get('/reset/', function (req, res) {
-    res.sendFile(__dirname + '/content/reset/reset.html');
-});
 app.get('/home/', function (req, res) {
     res.sendFile(__dirname + '/content/home/home.html');
 });
@@ -228,7 +225,7 @@ app.get('/reset/', function (req, res) { // process email verification link
     if (param.hash.length != 64) {
         res.sendFile(__dirname + '/content/reset/failure.html');
     }
-    con.query('SELECT uid FROM user_info WHERE uname = ? AND reset_code = ? AND verified = 0',
+    con.query('SELECT uid FROM user_info WHERE uname = ? AND reset_code = ?',
         [param.uname, param.hash],
         checkHash)
 
