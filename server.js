@@ -35,6 +35,12 @@ app.get('/login/', function (req, res) {
 app.get('/register/', function (req, res) {
     res.sendFile(__dirname + '/content/register/register.html');
 });
+app.get('/forgot/', function (req, res) {
+    res.sendFile(__dirname + '/content/forgot/forgot.html');
+});
+app.get('/reset/', function (req, res) {
+    res.sendFile(__dirname + '/content/reset/reset.html');
+});
 app.get('/home/', function (req, res) {
     res.sendFile(__dirname + '/content/home/home.html');
 });
@@ -119,7 +125,7 @@ app.post('/register/', function (req, res) {
 })
 
 app.get('/verify/', function (req, res) { // process email verification link
-
+    
     param = url.parse(req.url, true).query;
     con.query('SELECT uid FROM user_info WHERE uname = ? AND register_code = ? AND verified = 0',
         [param.uname, param.hash],
@@ -178,6 +184,105 @@ app.post('/login/', function (req, res) {
                 respondCode: 1,
                 message: "Okay!"
             })
+        }
+    }
+})
+
+app.post('/forgot/', function (req, res) {
+    if (ac.checkEmail(req.body.email) != "") {
+        res.json({
+            respondCode: -1,
+            message: "Invalid data. Are you a hacker?"
+        })
+    }
+    else {
+        con.query('SELECT uname FROM user_info WHERE email = ?', [req.body.email], checkEmail)
+    }
+    function checkEmail(err, result, fields) {
+        if (err) throw err
+        if (result.length == 0) { // no such email
+            res.json({
+                respondCode: 1, // let's just fake the user
+                message: "OK"
+            })
+        }
+        else {
+            var username = result[0].uname
+            randHash = util.randomHash()
+            con.query('UPDATE user_info SET reset_code = ? WHERE uname = ?',
+                [randHash, username], (err, result, fields) => {
+                    if (err) throw err
+                    util.ResetPasswordEmail(username, req.body.email, randHash)
+                    res.json({
+                        respondCode: 1,
+                        message: "OK"
+                    })
+                })
+        }
+    }
+})
+
+app.get('/reset/', function (req, res) { // process email verification link
+
+    param = url.parse(req.url, true).query;
+    if (param.hash.length != 64) {
+        res.sendFile(__dirname + '/content/reset/failure.html');
+    }
+    con.query('SELECT uid FROM user_info WHERE uname = ? AND reset_code = ? AND verified = 0',
+        [param.uname, param.hash],
+        checkHash)
+
+    function checkHash(err, result, fields) {
+        if (err) throw err
+        if (result.length == 0) {
+            res.sendFile(__dirname + '/content/reset/failure.html');
+        }
+        else {
+            res.sendFile(__dirname + '/content/reset/reset.html');
+        }
+    }
+
+});
+app.post('/reset/', function (req, res) {
+
+    param = url.parse(req.body.urlp, true).query;
+
+    if (param.hash.length != 64) {
+        res.json({
+            respondCode: -1,
+            message: "Invalid data. Are you a hacker?"
+        })
+    }
+    con.query('SELECT uid FROM user_info WHERE uname = ? AND reset_code = ?',
+        [param.uname, param.hash],
+        checkUrlParameter)
+
+    function checkUrlParameter(err, result, fields) {
+        if (err) throw err
+        if (result.length == 0) {
+            res.json({
+                respondCode: -1,
+                message: "Invalid data. Are you a hacker?"
+            })
+        }
+        else {
+            if (util.checkPasswordHash(req.body.pwHash) != "") {
+                res.json({
+                    respondCode: -1,
+                    message: "Invalid data. Are you a hacker?"
+                })
+            }
+            else {
+                con.query('UPDATE user_info SET a_password = ? WHERE uname = ?',
+                    [req.body.pwHash, param.uname],
+                    (err, result, fields) => {
+                        if (err) throw err
+                        res.json({
+                            respondCode: 1,
+                            message: "OK"
+                        })
+                    })
+            }
         }
     }
 })

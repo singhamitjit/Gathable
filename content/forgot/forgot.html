@@ -18,17 +18,20 @@
         Gathable
       </h1>
       
-      <form style="width: 100%;max-width: 600px;padding:40px 60px;margin: auto;border-radius: 40px;background-color:rgba(255, 255, 255, 0.8);">
+      <form style="width: 100%;max-width: 600px;padding:40px 60px;margin: auto;border-radius: 40px;background-color:rgba(255, 255, 255, 0.8);" onsubmit="return false">
         <h2 class="text-center mb-2 fw-normal">Forgot your password?</h2>
         <p class="text-center small">Please enter your email address of your account to reset your password</address></p>
         <label for="email" class="mb-3"><i class="bi bi-envelope-fill"></i> Email Address</label>
         <input type="email" id="email" class="form-control mb-3" placeholder="Email Address" required>
         <div class="d-flex justify-content-center mb-3">
-        <button class="btn btn-primary btn-lg w-50">Reset Password</button>
+        <button id="confirm" class="btn btn-primary btn-lg w-50">Reset Password</button>
         </div>
         <p class="mt-5 mb-3 text-muted text-center">&copy; Gathable</p>
       </form>
 
+    <script src='https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js'></script> <!--Ajax-->
+    <script src='/function/account.js'></script>
+    <script src="./forgot.js"></script>
     </body>
     <footer class="text-end text-light p-2 mt-5" style="background-color: #2c2c2c;">
         <b>&copy; Gathable</b>

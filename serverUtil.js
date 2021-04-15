@@ -47,4 +47,22 @@ function newUserEmail(username, email, hash) {
     });
 }
 
-module.exports = { checkPasswordHash, randomHash, groupHash, newUserEmail }    // have to export like this
+function ResetPasswordEmail(username, email, hash) {
+    var mailOptions = {
+        from: 'gathable@gmail.com',
+        to: email,
+        subject: 'Gathable: Reset Password',
+        html: '<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.4.0/font/bootstrap-icons.css">\
+        <h1>Thank you for using <a class="navbar-brand"><i class="bi bi-calendar-range"></i> Gathable</a></h1>\
+        <h3>Reset Password</h3><p>Click <a href=http://localhost:3100/reset/?uname=' + username + '&hash=' + hash + '> here</a> to reset your password.</p>\
+        <p>We hope you enjoy your experience with us!</p><p>Thanks.</p>'
+    }
+    transporter.sendMail(mailOptions, function (error, info) {
+        if (error)
+            console.log(error)
+        else
+            console.log('Email sent');
+    });
+}
+
+module.exports = { checkPasswordHash, randomHash, groupHash, newUserEmail, ResetPasswordEmail }    // have to export like this
