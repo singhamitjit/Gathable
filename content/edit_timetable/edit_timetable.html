@@ -24,7 +24,14 @@
               <li><a class="dropdown-item bg-secondary" href="#">My Timetable</a></li>
               <li><a class="dropdown-item" href="/groups/">My Groups</a></li>
               <li><hr class="dropdown-divider"></li>
-              <li><a class="dropdown-item" href="#">Log out</a></li>
+              <li><a class="dropdown-item" href="#" onclick="logout();return false;">Log out</a></li>
+              <script>
+                function logout() {
+                  document.cookie = "username=" + "XXX" + "; expires=Sat, 01 Jan 1970 00:00:00 UTC; path=/"
+                  document.cookie = "pwhash=" + "XXX" + "; expires=Sat, 01 Jan 1970 00:00:00 UTC; path=/"
+                  window.location.href = "/"
+                }
+              </script>
             </ul>
         </div>
     </div>        
@@ -104,6 +111,7 @@
   <a href="/add_event/"><button type="button" class="btn btn-primary">Add Event</button></a>
 
 </div>
+<script src='/function/account.js'></script>
 <script src="edit_timetable.js"></script>
 </body>
 </html>

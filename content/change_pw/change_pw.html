@@ -20,7 +20,7 @@
             <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false">Menu</a>
             <ul class="dropdown-menu dropdown-menu-end dropdown-menu-dark position-absolute" aria-labelledby="navbarDropdown">
               <li><a class="dropdown-item" href="/home/">Home</a></li>
-              <li><a class="dropdown-item bg-secondary" href="#">Profile</a></li>
+              <li><a class="dropdown-item" href="/profile/">Profile</a></li>
               <li><a class="dropdown-item" href="/timetable/">My Timetable</a></li>
               <li><a class="dropdown-item" href="/groups/">My Groups</a></li>
               <li><hr class="dropdown-divider"></li>
@@ -34,31 +34,45 @@
               </script>
             </ul>
         </div>
-    </div>        
+    </div>     
 </nav>
 <div class="container p-3">	  
-    <h3><i class="bi bi-person-circle"></i> Profile</h3>
+    <h3><i class="bi bi-lock-fill"></i>  Change Password</h3>
     <hr>
 </div>    
-<div class="container p-3">
-  <table class="table">
-    <tr>
-      <th style="width: 30%;">User ID</th>
-      <td id="uid"></td>
-    </tr>
-    <tr>
-      <th>UserName</th>
-      <td id="uname"></td>
-    </tr>
-    <tr>
-      <th>Email Address</th>
-      <td id="uemail"></td>
-    </tr>
-  </table>
-  <a href="/change_pw/"><button type="button" class="btn btn-primary">Change Password</button></a>
-</div>
+<div class="container p-3 w-75">
+  <form onsubmit="return false">
+    <label for="opassword" class="mb-3">Old password: </label>
+    <div class="input-group mb-3">
+        <input type="password" id="opassword" class="form-control" placeholder="Old password" required>
+        <button class="btn btn-outline-secondary" type="button" id="pwbtn" onmousedown="showPW('opassword', 'pwbtn')" onmouseup="hidePW('opassword', 'pwbtn')"><i class="bi bi-eye-slash-fill"></i></button>
+      </div>
+    <label for="npassword" class="mb-3">New password: </label>
+    <div class="input-group mb-3">
+        <input type="password" id="npassword" class="form-control" placeholder="New password" required>
+        <button class="btn btn-outline-secondary" type="button" id="npwbtn" onmousedown="showPW('npassword', 'npwbtn')" onmouseup="hidePW('npassword', 'npwbtn')"><i class="bi bi-eye-slash-fill"></i></button>
+      </div>
+      <label for="cpassword" class="mb-3">Confirm new password: </label>
+      <div class="input-group mb-3">
+        <input type="password" id="cpassword" class="form-control" placeholder="Confirm new password" required>
+        <button class="btn btn-outline-secondary" type="button" id="cpwbtn"  onmousedown="showPW('cpassword', 'cpwbtn')" onmouseup="hidePW('cpassword', 'cpwbtn')"><i class="bi bi-eye-slash-fill"></i></button>
+    </div>
+    <button id="change" type="submit" class="btn btn-primary" style="float: right;">Change</button>
+  </form>
+  <a href="/profile/"><button type="button" class="btn btn-secondary">Back</button></a>
 
-<script src='/function/account.js'></script>
-<script src="profile.js"></script>
 </body>
+<script>
+    function showPW(inptId, btnId) {
+      document.getElementById(inptId).type = 'text';
+      document.getElementById(btnId).innerHTML = '<i class="bi bi-eye-fill"></i>';
+    }
+    function hidePW(inptId, btnId) {
+      document.getElementById(inptId).type = 'password';
+      document.getElementById(btnId).innerHTML = '<i class="bi bi-eye-slash-fill"></i>';
+    }
+</script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jsSHA/2.0.2/sha.js"></script> <!--jsSHA-->
+<script src='/function/account.js'></script>
+<script src='change_pw.js'></script>
 </html>

@@ -24,7 +24,14 @@
               <li><a class="dropdown-item" href="/timetable/">My Timetable</a></li>
               <li><a class="dropdown-item" href="/groups/">My Groups</a></li>
               <li><hr class="dropdown-divider"></li>
-              <li><a class="dropdown-item" href="#">Log out</a></li>
+              <li><a class="dropdown-item" href="#" onclick="logout();return false;">Log out</a></li>
+              <script>
+                function logout(){
+                    document.cookie = "username=" + "XXX" + "; expires=Sat, 01 Jan 1970 00:00:00 UTC; path=/"
+                    document.cookie = "pwhash=" + "XXX" + "; expires=Sat, 01 Jan 1970 00:00:00 UTC; path=/"
+                    window.location.href = "/"
+                }
+              </script>
             </ul>
         </div>
     </div>>        
@@ -36,7 +43,7 @@
 <div class="container p-3">
     <div class="row">
         <section id="wellcome" class="col-sm col-lg-6 col-xl-6 p-2 p-lg-3">
-            <h2>Hello, <span id="name"></span><h2>
+            <h2>Hello, <span id="username"></span><h2>
             <h4>Wellcome to Gathable!</h4> 
             <br>
             <p>What do you want to do?</p>
@@ -57,7 +64,7 @@
         </section>
     </div>
 </div>
-
+<script src='/function/account.js'></script>
 <script src="home.js"></script>
 </body>
 </html>

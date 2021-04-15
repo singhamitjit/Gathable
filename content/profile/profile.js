@@ -1,18 +1,21 @@
-// send cookies to server first
+var uId
+var uName
+var uEmail
+
 $.ajax({
     type: 'POST',
     contentType: "application/json",
-    url: '/home',
+    url: '/profile',
     success: onsuccess,
     error: onerror
 })
 
-var username, email
-
 function onsuccess(data) {
     if (data.respondCode == 1) {
-        username = data.username
-        email = data.email
+        uId = data.uid
+        uName = data.uname
+        uEmail = data.uemail
+        displayInfo()
     }
     else {
         alert(data.message)
@@ -24,5 +27,8 @@ function onerror() {
     window.location.href = "/"
 }
 
-document.getElementById("username").innerHTML = username
-document.getElementById("email").innerHTML = email
+function displayInfo() {
+    document.getElementById("uid").innerHTML = uId;
+    document.getElementById("uname").innerHTML = uName;
+    document.getElementById("uemail").innerHTML = uEmail;
+}

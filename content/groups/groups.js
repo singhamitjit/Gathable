@@ -62,7 +62,7 @@ function displayGroupList() {
 		var bt = document.createElement('button');
 		bt.className = "list-group-item list-group-item-action groupButton";
 		bt.setAttribute("group_id", groupList[i].gid)
-		bt.setAttribute("onclick", `window.location.href='/group_tb/?uid=${groupList[i].gid}'`)
+		bt.setAttribute("onclick", `window.location.href='/group_tb/?gid=${groupList[i].gid}'`)
 		bt.appendChild(Div);
 
 		document.getElementById("grouplist").appendChild(bt);

@@ -26,7 +26,7 @@ function onerror() {
 }
 
 function displayGroupList() {
-	document.getElementById("name").innerHTML = yourname;
+	document.getElementById("username").innerHTML = yourname;
 	for (i = 0; i < groupList.length; i++) {
 		var Div = document.createElement("div");
 		Div.className = "list-group-item w-100 justify-content-between";

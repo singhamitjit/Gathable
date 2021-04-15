@@ -47,6 +47,7 @@ function displayEventList() {
         deleteBtn.type = "button";
         deleteBtn.style = "border-radius: 5px;";
         deleteBtn.className = "btn-block btn-danger p-1";
+        deleteBtn.setAttribute('onclick', `deleteEvent(${events[i].id})`)
         var del = document.createTextNode("delete");
         deleteBtn.appendChild(del);
         deleteC.appendChild(deleteBtn);
@@ -59,4 +60,28 @@ function displayEventList() {
 
         document.getElementById(events[i].day).appendChild(Tr);
     }
+}
+
+function deleteEvent(eid) { // delete button on click
+    $.ajax({
+        type: 'DELETE',
+        contentType: "application/json",
+        url: '/edit_timetable',
+        data: JSON.stringify({id: eid}),
+        success: delsuccess,
+        error: delerror
+    })
+}
+function delsuccess(data) {
+    if (data.respondCode == 1) {
+        window.location.href = "/edit_timetable/"
+    }
+    else {
+        alert(data.message)
+        badCookies()
+    }
+}
+function delerror() {
+    alert('failed to connect to server...')
+    window.location.href = "/"
 }

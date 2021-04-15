@@ -48,7 +48,6 @@ $('#signIn').click(() => {
             alert(data.message)
         }
         else {
-            alert("Successful login!")
             // add cookie storing username and password hash (hardcode the expire date as 2022/01/01 for now),
             // set path to root so every page can access
             document.cookie = "username=" + userId + "; expires=Sat, 01 Jan 2022 00:00:00 GMT; path=/"

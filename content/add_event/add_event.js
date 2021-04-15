@@ -31,6 +31,7 @@ $('#add').click(() => {
     function onsuccess(data) {
         if (data.respondCode != 1) {
             alert(data.message)
+            badCookies()
         }
         else {
             window.location.href = "/edit_timetable/"

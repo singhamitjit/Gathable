@@ -25,7 +25,7 @@ function randomHash() {
 
 function groupHash(groupId) {
     var hashObj = new jsSHA("SHA-256", "TEXT", { numRounds: 1 })    // numRounds: how many hash iterations, 1 is good enough for us
-    hashObj.update(groupId.toString())
+    hashObj.update(Math.random().toString(16).substring(2) + groupId.toString())
     return hashObj.getHash("HEX")   // return hash value as a hexadecimal string
 }
 

@@ -28,5 +28,5 @@ function displayTimetable() {
     for (i = 0; i < events.length; i++) {
         $(`#${events[i].day}`).append(`<li class="cd-schedule__event"><a data-start="${events[i].start}" data-end="${events[i].end}" data-event="event-1"><em class="cd-schedule__name">${events[i].eventName}</em></a></li>`);
     }
-    renderTimetable()
+    renderTimetable() // call the 3rd party render timetable function
 }

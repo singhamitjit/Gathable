@@ -37,28 +37,22 @@
     </div>>        
 </nav>
 <div class="container p-3">	  
-    <h3><i class="bi bi-people-fill"></i> Create New Group</h3>
+    <h3><i class="bi bi-people-fill"></i> Leave Group</h3>
     <hr>
-</div>    
-<div class="container p-3 w-75">
-    <form onsubmit="return false">
-        <label for="event">Group name:</label>
-        <input id="event" class="form-control" placeholder="Group name" maxlength="20" required>
-        <small>Group name should be at most 20 characters</small>
-        <br>
-        <br>
-        <label for="event">Group description:</label>
-        <textarea class="form-control" placeholder="Description" id="description" maxlength="100" style="height: 200px"></textarea>
-        <small>Group description should be at most 100 characters</small>
-        <br>
-        <br>
-      <div>
-          <a href="/groups/"><button type="button" class="btn btn-secondary">Back</button></a>
-          <button type="button" id="confirm" class="btn btn-primary" style="float: right;">Create</button>
-      </div>
-    </form>
+</div>  
+
+<div class="container p-3">
+    <p class="text-danger text-uppercase fs-4"><i class="bi bi-exclamation-diamond"></i> If you are the creator of the group, the group will be delete</p>
+    <p class="fs-6"> You are going to leave the group: </p>
+    <p><span class="fs-5 fw-bold" id="gpname"></span></p>
+    <p class="fs-6"> If you make sure to leave this group, click the "Leave" button. It might take some to reflect changes on your browser.</p>
 </div>
-<script src='/function/account.js'></script>
-<script src='./create_group.js'></script>
+
+<div class="container p-3">
+    <button id="back" type="button" class="btn btn-secondary">Back</button>
+    <button id="leave" type="submit" class="btn btn-primary" style="float: right;">Leave</button>
+</div>
 </body>
+<script src='/function/account.js'></script>
+<script src="leave.js"></script>
 </html>

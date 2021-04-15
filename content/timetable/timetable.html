@@ -30,7 +30,14 @@
           <li>
             <hr class="dropdown-divider">
           </li>
-          <li><a class="dropdown-item" href="#">Log out</a></li>
+          <li><a class="dropdown-item" href="#" onclick="logout();return false;">Log out</a></li>
+          <script>
+            function logout() {
+              document.cookie = "username=" + "XXX" + "; expires=Sat, 01 Jan 1970 00:00:00 UTC; path=/"
+              document.cookie = "pwhash=" + "XXX" + "; expires=Sat, 01 Jan 1970 00:00:00 UTC; path=/"
+              window.location.href = "/"
+            }
+          </script>
         </ul>
       </div>
     </div>
@@ -186,6 +193,7 @@
   <script src='https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js'></script>
   <script src="assets/js/util.js"></script> <!-- util functions included in the CodyHouse framework -->
   <script src="assets/js/main.js"></script>
+  <script src='/function/account.js'></script>
   <script src="timetable.js"></script>
 </body>
 </html>

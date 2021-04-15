@@ -2,7 +2,7 @@ const express = require('express')
 const url = require('url')
 const cookieParser = require('cookie-parser') // for reading cookies
 const ac = require('./content/function/account.js')
-const db = require('./databaseFunc.js')
+// const db = require('./databaseFunc.js')
 const util = require('./serverUtil.js')
 const app = express()
 
@@ -15,6 +15,7 @@ app.use(cookieParser());
 // initialize database
 var mysql = require('mysql')
 const e = require('express')
+const { get } = require('http')
 var con = mysql.createConnection({ // database connection
     // create connection to MySQL server
     host: 'localhost',
@@ -22,7 +23,7 @@ var con = mysql.createConnection({ // database connection
     user: 'root',
     password: 'csci3100b8',
     database: 'gathable',
-    multipleStatements: true
+    multipleStatements: false // actually not used, disable to prevent SQL Injection Attack
 })
 
 app.get('/', function (req, res) {
@@ -40,6 +41,9 @@ app.get('/home/', function (req, res) {
 app.get('/profile/', function (req, res) {
     res.sendFile(__dirname + '/content/profile/profile.html');
 });
+app.get('/change_pw/', function (req, res) {
+    res.sendFile(__dirname + '/content/change_pw/change_pw.html');
+});
 app.get('/timetable/', function (req, res) {
     res.sendFile(__dirname + '/content/timetable/timetable.html');
 });
@@ -55,6 +59,12 @@ app.get('/create_group/', function (req, res) {
 app.get('/groups/', function (req, res) {
     res.sendFile(__dirname + '/content/groups/groups.html');
 });
+app.get('/group_tb/', function (req, res) {
+    res.sendFile(__dirname + '/content/group_tb/group_tb.html');
+});
+app.get('/leave/', function (req, res) {
+    res.sendFile(__dirname + '/content/leave/leave.html');
+})
 // this page is for debug purpose only
 app.get('/debug/', function (req, res) {
     res.sendFile(__dirname + '/content/debug/debug.html');
@@ -198,8 +208,15 @@ function homeOrGroups(res, req) {
     var counter = 0
     function getGroupId(err, result, fields) {
         if (err) throw err
-        if (result.length == 0)
+        if (result.length == 0){
+            res.json({
+                respondCode: 1,
+                message: "so far so good",
+                username: req.cookies.username,
+                groupList: groupList
+            })
             return
+        }
         for (var i = 0; i < result.length; i++) {
             groupList.push({
                 gid: result[i].gid,
@@ -236,21 +253,301 @@ function homeOrGroups(res, req) {
     }
 }
 
-app.post('/profile/', function (req, res) {
-    if (!db.verifyLogin(req.cookies.username, req.cookies.pwhash)) {
-        res.json({
-            respondCode: -1,
-            message: "Cookies verification error."
+app.post('/group_tb/', function (req, res) {
+    con.query('SELECT uid FROM user_info WHERE uname = ? AND a_password = ? AND verified = 1',
+        [req.cookies.username, req.cookies.pwhash], checkCookie)
+    var groupId = -1
+    function checkCookie(err, result, fields) {
+        if (err) throw err
+        if (result.length == 0) { // bad cookies
+            res.json({
+                respondCode: -1,
+                message: "Cookies verification error."
+            })
+        }
+        else {
+            groupId = url.parse(req.url, true).query.gid
+            con.query('SELECT id FROM group_relation WHERE uname = ? AND gid = ?', [req.cookies.username, groupId], checkMember)
+        }
+    }
+    function checkMember(err, result, fields) {
+        if (err) throw err
+        if (result.length == 0) { // haven't joined the group, hacker
+            res.json({
+                respondCode: -1,
+                message: "Error: you haven't joined this group yet"
+            })
+        }
+        else {
+            con.query('SELECT gname, ghash FROM group_data WHERE id = ?', [groupId], getGroupHash)
+        }
+    }
+    var members = []
+    var counter = 0
+    var eventList = []
+    var groupName
+    var groupHash
+    function getGroupHash(err, result, fields) {
+        if (err) throw err
+        groupName = result[0].gname
+        groupHash = result[0].ghash
+        con.query('SELECT uname FROM group_relation WHERE gid = ?', [groupId], getUname)
+    }
+    function getUname(err, result, fields) {
+        if (err) throw err
+        members = result
+        getEvent()
+    }
+    function getEvent() {
+        if (counter >= members.length) {
+            res.json({
+                respondCode: 1,
+                message: "OK!",
+                groupName: groupName,
+                groupHash: groupHash,
+                eventList: eventList
+            })
+        }
+        else {
+            con.query('SELECT day, start_time, end_time FROM event_data WHERE uname = ?', [members[counter].uname], getEvents)
+        }
+    }
+    function getEvents(err, result, fields){
+        if (err) throw err
+        for (var i = 0; i < result.length; i++) {
+            eventList.push({
+                day: result[i].day,
+                start: result[i].start_time,
+                end: result[i].end_time
+            })
+        }
+        counter++
+        getEvent()
+    }
+})
+
+app.post('/create_group/', function (req, res) {
+    con.query('SELECT uid FROM user_info WHERE uname = ? AND a_password = ? AND verified = 1',
+        [req.cookies.username, req.cookies.pwhash], checkCookie)
+
+    function checkCookie(err, result, fields) {
+        if (err) throw err
+        if (result.length == 0) { // if cookie is incorrect... (most likely a hacker)
+            res.json({
+                respondCode: -1,
+                message: "Cookies verification error."
+            })
+        }
+        else {
+            if (req.body.groupName.length > 20 || req.body.groupName.length == 0) {
+                res.json({
+                    respondCode: -1,
+                    message: "Group name error. Hacker?"
+                })
+            }
+            else if (req.body.description.length > 100) {
+                res.json({
+                    respondCode: -1,
+                    message: "Group description error. Hacker?"
+                })
+            }
+            else {
+                con.query('INSERT INTO group_data VALUES (?, ?, ?, ?, ?)',
+                    [null, req.cookies.username, req.body.groupName, req.body.description, null],
+                    hashGroup)
+            }
+        }
+    }
+    function hashGroup(err, result, fields) {
+        if (err) throw err
+        var groupId = result.insertId
+        var groupHash = util.groupHash(groupId)
+        con.query('UPDATE group_data SET ghash = ? WHERE id = ?',
+            [groupHash, result.insertId], updateRelation)
+
+        function updateRelation(err, result, fields) {
+            if (err) throw err
+            con.query('INSERT INTO group_relation VALUES (?, ?, ?)',
+                [null, groupId, req.cookies.username],
+                (err, result, fields) => {
+                    if (err) throw err
+                    res.json({
+                        respondCode: 1,
+                        message: "OK!"
+                    })
+                })
+        }
+    }
+})
+
+app.get('/join/', function (req, res) { // joining a group
+
+    con.query('SELECT uid FROM user_info WHERE uname = ? AND a_password = ? AND verified = 1',
+        [req.cookies.username, req.cookies.pwhash], checkCookie)
+
+    function checkCookie(err, result, fields) {
+        if (err) throw err
+        if (result.length == 0) { // bad cookies
+            res.sendFile(__dirname + '/content/join/failure.html');
+        }
+        else {
+            param = url.parse(req.url, true).query;
+            con.query('SELECT id FROM group_data WHERE ghash = ?', [param.hash], checkHash)
+        }
+    }
+    var groupId;
+    function checkHash(err, result, fields) {
+        if (err) throw err
+        if (result.length == 0) { // if there's no such group...
+            res.sendFile(__dirname + '/content/join/failure.html');
+        }
+        else {
+            groupId = result[0].id
+            con.query('SELECT uname FROM group_relation WHERE gid = ? AND uname = ?', [groupId, req.cookies.username], checkJoin)
+        }
+    }
+    function checkJoin(err, result, fields) {
+        if (err) throw err
+        if (result.length > 0) { // if already joined...
+            res.sendFile(__dirname + '/content/join/failure.html');
+        }
+        else {
+            con.query('INSERT INTO group_relation VALUES (?, ?, ?)',
+                [null, groupId, req.cookies.username],
+                (err, result, fields) => {
+                    if (err) throw err
+                    res.sendFile(__dirname + '/content/join/success.html');
+                })
+        }
+    }
+});
+
+app.post('/leave/', function (req, res) {
+    con.query('SELECT uid FROM user_info WHERE uname = ? AND a_password = ? AND verified = 1',
+        [req.cookies.username, req.cookies.pwhash], checkCookie)
+    var groupId = -1
+    function checkCookie(err, result, fields) {
+        if (err) throw err
+        if (result.length == 0) { // bad cookies
+            res.json({
+                respondCode: -1,
+                message: "Cookies verification error."
+            })
+        }
+        else {
+            groupId = url.parse(req.url, true).query.gid
+            con.query('SELECT id FROM group_data WHERE id = ? AND manager = ?', [groupId, req.cookies.username], checkManager)
+        }
+    }
+    function checkManager(err, result, fields) {
+        if (err) throw err
+        if (result.length > 0) { // the one leaving is the creator!
+            removeGroup()
+        }
+        else {
+            leaveGroup()
+        }
+    }
+    function removeGroup() {
+        con.query('DELETE FROM group_relation WHERE gid = ?', [groupId], (err, result, fields) => {
+            if (err) throw err
+            con.query('DELETE FROM group_data WHERE id = ?', [groupId], (err, result, fields) => {
+                if (err) throw err
+                res.json({
+                    respondCode: 1,
+                    message: "OK"
+                })
+            })
         })
     }
-    // else
-    var email = db.getEmail(req.cookies.username)
-    res.json({
-        respondCode: 1,
-        message: "so far so good",
-        username: req.cookies.username,
-        email: email
-    })
+    function leaveGroup() {
+        con.query('DELETE FROM group_relation WHERE gid = ? AND uname = ?', [groupId, req.cookies.username], (err, result, fields) => {
+            if (err) throw err
+            res.json({
+                respondCode: 1,
+                message: "OK"
+            })
+        })
+    }
+})
+
+app.post('/profile/', function (req, res) {
+    con.query('SELECT uid FROM user_info WHERE uname = ? AND a_password = ? AND verified = 1',
+        [req.cookies.username, req.cookies.pwhash], checkCookie)
+    function checkCookie(err, result, fields) {
+        if (err) throw err
+        if (result.length == 0) { // bad cookies
+            res.json({
+                respondCode: -1,
+                message: "Cookies verification error."
+            })
+        }
+        else {
+            con.query('SELECT uid, uname, email FROM user_info WHERE uname = ?', [req.cookies.username], sendInfo)
+        }
+    }
+    function sendInfo(err, result, fields) {
+        if (err) throw err
+        if (result.length == 0) {
+            res.json({
+                respondCode: -1,
+                message: "You do not exist!?"
+            })
+        } else {
+            res.json({
+                respondCode: 1,
+                message: "OK",
+                uid: result[0].uid,
+                uname: result[0].uname,
+                uemail: result[0].email
+            })
+        }
+    }
+})
+
+app.post('/change_pw/', function (req, res) {
+    // check validity of received data 
+    if (util.checkPasswordHash(req.body.ohash) != "" || util.checkPasswordHash(req.body.nhash) != "" ) {
+        res.json({
+            respondCode: -1,
+            message: "Invalid data. Are you a hacker?"
+        })
+        return
+    }
+    con.query('SELECT uid FROM user_info WHERE uname = ? AND a_password = ? AND verified = 1',
+        [req.cookies.username, req.cookies.pwhash], checkCookie)
+    function checkCookie(err, result, fields) {
+        if (err) throw err
+        if (result.length == 0) { // bad cookies
+            res.json({
+                respondCode: -1,
+                message: "Cookies verification error."
+            })
+        }
+        else {
+            con.query('SELECT uid FROM user_info WHERE uname = ? AND a_password = ?', [req.cookies.username, req.body.ohash], checkOldPassword)
+        }
+    }
+    function checkOldPassword(err, result, fields) {
+        if (err) throw err
+        if (result.length == 0) { // wrong old password
+            res.json({
+                respondCode: 0,
+                message: "Wrong old pw"
+            })
+        }
+        else {
+            con.query('UPDATE user_info SET a_password = ? WHERE uname = ?',
+                [req.body.nhash, req.cookies.username],
+                (err, result, fields) => {
+                    if (err) throw err
+                    res.json({
+                        respondCode: 1,
+                        message: "OK"
+                    })
+            })
+        }
+    }
 })
 
 app.post('/timetable/', function (req, res) {
@@ -272,7 +569,7 @@ function sendTimetable(req, res) {
             })
         }
         else {
-            con.query('SELECT e_name, day, start_time, end_time FROM event_data WHERE uname = ?', [req.cookies.username], getEvents)
+            con.query('SELECT id, e_name, day, start_time, end_time FROM event_data WHERE uname = ?', [req.cookies.username], getEvents)
         }
     }
     function getEvents(err, result, fields) {
@@ -281,6 +578,7 @@ function sendTimetable(req, res) {
         var eventList = []
         for (var i = 0; i < result.length; i++) {
             eventList.push({
+                id: result[i].id,
                 day: result[i].day,
                 eventName: result[i].e_name,
                 start: result[i].start_time,
@@ -294,6 +592,30 @@ function sendTimetable(req, res) {
         })
     }
 }
+
+app.delete('/edit_timetable/', function (req, res) {
+    con.query('SELECT uid FROM user_info WHERE uname = ? AND a_password = ? AND verified = 1',
+        [req.cookies.username, req.cookies.pwhash], checkCookie)
+
+    function checkCookie(err, result, fields) {
+        if (err) throw err
+        if (result.length == 0) { // if cookie is incorrect... (most likely a hacker)
+            res.json({
+                respondCode: -1,
+                message: "Cookies verification error."
+            })
+        }
+        else {
+            con.query('DELETE FROM event_data WHERE id = ?', [req.body.id], (err, result, fields) => {
+                if (err) throw err
+                res.json({
+                    respondCode: 1,
+                    message: "OK"
+                })
+            })
+        }
+    }
+})
 
 app.post('/add_event/', function (req, res) {
     con.query('SELECT uid FROM user_info WHERE uname = ? AND a_password = ? AND verified = 1',
@@ -327,100 +649,5 @@ app.post('/add_event/', function (req, res) {
     }
 })
 
-app.post('/create_group/', function (req, res) {
-    con.query('SELECT uid FROM user_info WHERE uname = ? AND a_password = ? AND verified = 1',
-        [req.cookies.username, req.cookies.pwhash], checkCookie)
-
-    function checkCookie(err, result, fields) {
-        if (err) throw err
-        if (result.length == 0) { // if cookie is incorrect... (most likely a hacker)
-            res.json({
-                respondCode: -1,
-                message: "Cookies verification error."
-            })
-        }
-        else {
-            if (req.body.groupName.length > 20 || req.body.groupName.length == 0) {
-                res.json({
-                    respondCode: -1,
-                    message: "Group name error. Hacker?"
-                })
-            }
-            else if (req.body.description.length > 100) {
-                res.json({
-                    respondCode: -1,
-                    message: "Group description error. Hacker?"
-                })
-            }
-            else {
-                con.query('INSERT INTO group_data VALUES (?, ?, ?, ?, ?)',
-                    [null, req.cookies.username, req.body.groupName, req.body.description, null],
-                hashGroup)
-            }
-        }
-    }
-    function hashGroup(err, result, fields) {
-        if (err) throw err
-        var groupId = result.insertId
-        var groupHash = util.groupHash(groupId)
-        con.query('UPDATE group_data SET ghash = ? WHERE id = ?',
-            [groupHash, result.insertId], updateRelation)
-
-        function updateRelation(err, result, fields) {
-            if (err) throw err
-            con.query('INSERT INTO group_relation VALUES (?, ?, ?)',
-                [null, groupId, req.cookies.username],
-                (err, result, fields) => {
-                    if (err) throw err
-                    res.json({
-                        respondCode: 1,
-                        message: "OK!"
-                    })
-                })
-        }
-    }
-})
-
-app.get('/join/', function (req, res) { // joinning a group
-
-    con.query('SELECT uid FROM user_info WHERE uname = ? AND a_password = ? AND verified = 1',
-        [req.cookies.username, req.cookies.pwhash], checkCookie)
-
-    function checkCookie(err, result, fields) {
-        if (err) throw err
-        if (result.length == 0) { // bad cookies
-            res.sendFile(__dirname + '/content/join/failure.html');
-        }
-        else {
-            param = url.parse(req.url, true).query;
-            con.query('SELECT id FROM group_data WHERE ghash = ?', [param.hash], checkHash)
-        }
-    }
-    var groupId;
-    function checkHash(err, result, fields) {
-        if (err) throw err
-        if (result.length == 0) { // if there's no such group...
-            res.sendFile(__dirname + '/content/join/failure.html');
-        }
-        else {
-            groupId = result[0].id
-            con.query('SELECT uname FROM group_relation WHERE gid = ?', [groupId], checkJoin)
-        }
-    }
-    function checkJoin(err, result, fields) {
-        if (err) throw err
-        if (result.length > 0) { // if already joined...
-            res.sendFile(__dirname + '/content/join/failure.html');
-        }
-        else {
-            con.query('INSERT INTO group_relation VALUES (?, ?, ?)',
-                [null, groupId, req.cookies.username],
-                (err, result, fields) => {
-                    if (err) throw err
-                    res.sendFile(__dirname + '/content/join/success.html');
-                })
-        }
-    }
-});
 
 app.listen(PORT)

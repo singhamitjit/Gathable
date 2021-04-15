@@ -38,12 +38,12 @@ $('#confirm').click(() => {
 })
 
 function onsuccess(data) {
-    if (data.respondCode != 1) { // not successful because of invalid data or username registered already
+    if (data.respondCode != 1) {
         alert(data.message)
+        badCookies()
     }
     else {
-        alert("Group created successfully.")
-        window.location.href = "/home/"
+        window.location.href = "/groups/"
     }
 }
 
