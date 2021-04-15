@@ -273,7 +273,7 @@ app.post('/reset/', function (req, res) {
                 })
             }
             else {
-                con.query('UPDATE user_info SET a_password = ? WHERE uname = ?',
+                con.query('UPDATE user_info SET a_password = ?, reset_code = "nil" WHERE uname = ?',
                     [req.body.pwHash, param.uname],
                     (err, result, fields) => {
                         if (err) throw err
