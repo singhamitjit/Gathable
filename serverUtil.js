@@ -1,5 +1,5 @@
-const jsSHA = require("jssha");
-const nodemailer = require('nodemailer');
+const jsSHA = require("jssha"); // package for hash operations
+const nodemailer = require('nodemailer'); // package for sending emails
 var transporter = nodemailer.createTransport({
     service: 'gmail',
     auth: {

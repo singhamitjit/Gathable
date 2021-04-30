@@ -1,15 +1,14 @@
 $('#change').click(() => {
 
-    var opw = $('#opassword').val()
-    var npw = $('#npassword').val()
-    var cpw = $('#cpassword').val()
-    //alert("" + opw + '\n' + npw + '\n' + cpw)
+    var opw = $('#opassword').val() // old password
+    var npw = $('#npassword').val() // new password
+    var cpw = $('#cpassword').val() // confirm password
 
     if (opw == '' || npw == "" || cpw == '') {
         return
     }
     var msg
-    msg = checkPassword(npw)
+    msg = checkPassword(npw) // from /function/account.js
     if (msg != "") {
         alert(msg)
         return
@@ -19,7 +18,7 @@ $('#change').click(() => {
         return
     }
 
-    // hash the password
+    // hash the old password and new password
     var hashObj = new jsSHA("SHA-256", "TEXT", { numRounds: 1 }); // numRounds: how many hash iterations, 1 is okay
     hashObj.update(opw);
     var ohash = hashObj.getHash("HEX");
@@ -28,8 +27,8 @@ $('#change').click(() => {
     var nhash = hashObj.getHash("HEX");
 
     var message = {
-        ohash: ohash,
-        nhash: nhash,
+        ohash: ohash, // old password hash
+        nhash: nhash, // new password hash
     }
     $.ajax({
         type: 'POST',
@@ -52,7 +51,7 @@ $('#change').click(() => {
         }
         else {
             alert(data.message)
-            badCookies()
+            badCookies() // from /function/account.js
         }
     }
     function onerror() {

@@ -1,7 +1,7 @@
 // regular expression reference: https://www.w3resource.com/javascript/form/password-validation.php
 
 function checkUserId(userId) {
-    var userIdFormat = /^[A-Za-z]\w{3,20}$/ // regular expression, see the above link for details
+    var userIdFormat = /^[A-Za-z]\w{2,20}$/ // regular expression, see the above link for details
     if (!userId.match(userIdFormat)) {
         return "Username should satisfy the following requirements:\
         \n - between 3 to 20 characters\
@@ -41,4 +41,4 @@ function badCookies() {
     return
 }
 
-module.exports = { checkUserId, checkPassword, checkEmail, badCookies }    // have to export to nodeJS like this
+module.exports = { checkUserId, checkPassword, checkEmail, badCookies }    // have to export to Node.js like this

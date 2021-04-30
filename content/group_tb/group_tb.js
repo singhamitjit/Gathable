@@ -5,9 +5,9 @@ $.ajax({
     error: onerror
 })
 
-var groupName
-var groupHash
-var eventList
+var groupName;
+var groupHash;
+var eventList;
 
 function onsuccess(data) {
     if (data.respondCode == 1) {
@@ -26,7 +26,7 @@ function onerror() {
     window.location.href = "/"
 }
 
-function displayTimetableAndStuff() {
+function displayTimetableAndStuff() { // display the timetable union of the group
     document.getElementById("gpname").innerHTML = groupName
     document.getElementById("gplink").innerHTML = window.location.host + '/join/?hash=' + groupHash
     for (i = 0; i < eventList.length; i++) {

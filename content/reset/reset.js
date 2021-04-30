@@ -1,7 +1,7 @@
 $('#confirm').click(() => {
     
-    var npw = $('#password').val()
-    var cpw = $('#cpassword').val()
+    var npw = $('#password').val()  // new password
+    var cpw = $('#cpassword').val() // confirm new password
 
     if (npw == "" || cpw == "") {
         return
@@ -24,7 +24,7 @@ $('#confirm').click(() => {
 
     var message = {
         pwHash: pwHash,
-        urlp: window.location.search
+        urlp: window.location.search // url parameters contatning username and password reset hash
     }
 
     $.ajax({

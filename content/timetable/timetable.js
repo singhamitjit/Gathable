@@ -7,7 +7,7 @@ $.ajax({
     error: onerror
 })
 
-var events
+var events;
 
 function onsuccess(data) {
     if (data.respondCode == 1) {

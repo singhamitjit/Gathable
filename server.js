@@ -1,9 +1,8 @@
 const express = require('express')
 const url = require('url')
-const cookieParser = require('cookie-parser') // for reading cookies
-const ac = require('./content/function/account.js')
-// const db = require('./databaseFunc.js')
-const util = require('./serverUtil.js')
+const cookieParser = require('cookie-parser')       // for reading cookies
+const ac = require('./content/function/account.js') // functions for checking format correctness of username and email
+const util = require('./serverUtil.js')             // server utility functions for performing hash operations and sending emails
 const app = express()
 
 const PORT = 3100
@@ -23,7 +22,7 @@ var con = mysql.createConnection({ // database connection
     user: 'root',
     password: 'csci3100b8',
     database: 'gathable',
-    multipleStatements: false // actually not used, disable to prevent SQL Injection Attack
+    multipleStatements: false // disabled to prevent SQL Injection Attacks
 })
 
 app.get('/', function (req, res) {
@@ -69,9 +68,9 @@ app.get('/leave/', function (req, res) {
     res.sendFile(__dirname + '/content/leave/leave.html');
 })
 // this page is for debug purpose only
-app.get('/debug/', function (req, res) {
-    res.sendFile(__dirname + '/content/debug/debug.html');
-});
+// app.get('/debug/', function (req, res) {
+//     res.sendFile(__dirname + '/content/debug/debug.html');
+// });
 
 app.post('/register/', function (req, res) {
 
@@ -123,14 +122,14 @@ app.post('/register/', function (req, res) {
 
 app.get('/verify/', function (req, res) { // process email verification link
     
-    param = url.parse(req.url, true).query;
+    param = url.parse(req.url, true).query; // parse the url parameters containing username and verification hash
     con.query('SELECT uid FROM user_info WHERE uname = ? AND register_code = ? AND verified = 0',
         [param.uname, param.hash],
         verifcationValid)
 
     function verifcationValid(err, result, fields) {
         if (err) throw err
-        if (result.length > 0) {
+        if (result.length > 0) { // verification data is correct
             con.query("UPDATE user_info SET verified = 1 WHERE uid = ?",
             [result[0].uid],
             (err, result, fields) => { if (err) throw err })
@@ -199,7 +198,7 @@ app.post('/forgot/', function (req, res) {
         if (err) throw err
         if (result.length == 0) { // no such email
             res.json({
-                respondCode: 1, // let's just fake the user
+                respondCode: 1, // let's just fake the user that we have sent the email
                 message: "OK"
             })
         }
@@ -209,9 +208,9 @@ app.post('/forgot/', function (req, res) {
             con.query('UPDATE user_info SET reset_code = ? WHERE uname = ?',
                 [randHash, username], (err, result, fields) => {
                     if (err) throw err
-                    util.ResetPasswordEmail(username, req.body.email, randHash)
+                    util.ResetPasswordEmail(username, req.body.email, randHash) // in this case we really send an email
                     res.json({
-                        respondCode: 1,
+                        respondCode: 1, 
                         message: "OK"
                     })
                 })
@@ -231,7 +230,7 @@ app.get('/reset/', function (req, res) { // process email verification link
 
     function checkHash(err, result, fields) {
         if (err) throw err
-        if (result.length == 0) {
+        if (result.length == 0) { // incorrect password reset link
             res.sendFile(__dirname + '/content/reset/failure.html');
         }
         else {
@@ -242,7 +241,7 @@ app.get('/reset/', function (req, res) { // process email verification link
 });
 app.post('/reset/', function (req, res) {
 
-    param = url.parse(req.body.urlp, true).query;
+    param = url.parse(req.body.urlp, true).query; // parse the url parameters containing username and password reset hash
 
     if (param.hash.length != 64) {
         res.json({
@@ -256,14 +255,14 @@ app.post('/reset/', function (req, res) {
 
     function checkUrlParameter(err, result, fields) {
         if (err) throw err
-        if (result.length == 0) {
+        if (result.length == 0) { // invalid password reset hash
             res.json({
                 respondCode: -1,
                 message: "Invalid data. Are you a hacker?"
             })
         }
         else {
-            if (util.checkPasswordHash(req.body.pwHash) != "") {
+            if (util.checkPasswordHash(req.body.pwHash) != "") { // invalid password hash format
                 res.json({
                     respondCode: -1,
                     message: "Invalid data. Are you a hacker?"
@@ -284,10 +283,10 @@ app.post('/reset/', function (req, res) {
     }
 })
 
-app.post('/home/', function (req, res) { // both home and groups do the same thing, included in homeOrGroups()
+app.post('/home/', function (req, res) {    // both home and groups do the same thing, included in homeOrGroups()
     homeOrGroups(res, req)
 })
-app.post('/groups/', function (req, res) {
+app.post('/groups/', function (req, res) {  // both home and groups do the same thing, included in homeOrGroups()
     homeOrGroups(res, req) 
 })
 function homeOrGroups(res, req) {
@@ -306,7 +305,7 @@ function homeOrGroups(res, req) {
             con.query('SELECT gid FROM group_relation WHERE uname = ?', [req.cookies.username], getGroupId)
         }
     }
-    var groupList = []
+    var groupList = [] // retrieve user's group list
     var counter = 0
     function getGroupId(err, result, fields) {
         if (err) throw err
@@ -330,7 +329,7 @@ function homeOrGroups(res, req) {
         }
         con.query('SELECT gname, manager, gnotice FROM group_data WHERE id = ?', [groupList[counter].gid], getGroupData)
     }
-    function getGroupData(err, result, fields) {
+    function getGroupData(err, result, fields) { // callback function cycle getGroupData <--> getGroupCount to fill the group list
         if (err) throw err
         groupList[counter].gname = result[0].gname
         groupList[counter].gmanager = result[0].manager
@@ -387,8 +386,8 @@ app.post('/group_tb/', function (req, res) {
     var members = []
     var counter = 0
     var eventList = []
-    var groupName
-    var groupHash
+    var groupName;
+    var groupHash;
     function getGroupHash(err, result, fields) {
         if (err) throw err
         groupName = result[0].gname
@@ -398,9 +397,9 @@ app.post('/group_tb/', function (req, res) {
     function getUname(err, result, fields) {
         if (err) throw err
         members = result
-        getEvent()
+        nextMember()
     }
-    function getEvent() {
+    function nextMember() { // callback function cycle nextMember <--> getEvents to fill the group event list
         if (counter >= members.length) {
             res.json({
                 respondCode: 1,
@@ -424,7 +423,7 @@ app.post('/group_tb/', function (req, res) {
             })
         }
         counter++
-        getEvent()
+        nextMember()
     }
 })
 
@@ -454,7 +453,7 @@ app.post('/create_group/', function (req, res) {
                 })
             }
             else {
-                con.query('INSERT INTO group_data VALUES (?, ?, ?, ?, ?)',
+                con.query('INSERT INTO group_data VALUES (?, ?, ?, ?, ?)', // add the new group to the database
                     [null, req.cookies.username, req.body.groupName, req.body.description, null],
                     hashGroup)
             }
@@ -469,7 +468,7 @@ app.post('/create_group/', function (req, res) {
 
         function updateRelation(err, result, fields) {
             if (err) throw err
-            con.query('INSERT INTO group_relation VALUES (?, ?, ?)',
+            con.query('INSERT INTO group_relation VALUES (?, ?, ?)', // add group relation of the creator to the group
                 [null, groupId, req.cookies.username],
                 (err, result, fields) => {
                     if (err) throw err
@@ -514,7 +513,7 @@ app.get('/join/', function (req, res) { // joining a group
             res.sendFile(__dirname + '/content/join/failure.html');
         }
         else {
-            con.query('INSERT INTO group_relation VALUES (?, ?, ?)',
+            con.query('INSERT INTO group_relation VALUES (?, ?, ?)', // add the user to the group
                 [null, groupId, req.cookies.username],
                 (err, result, fields) => {
                     if (err) throw err
@@ -590,7 +589,7 @@ app.post('/profile/', function (req, res) {
     }
     function sendInfo(err, result, fields) {
         if (err) throw err
-        if (result.length == 0) {
+        if (result.length == 0) { // no such username
             res.json({
                 respondCode: -1,
                 message: "You do not exist!?"
@@ -639,7 +638,7 @@ app.post('/change_pw/', function (req, res) {
             })
         }
         else {
-            con.query('UPDATE user_info SET a_password = ? WHERE uname = ?',
+            con.query('UPDATE user_info SET a_password = ? WHERE uname = ?', // update the new password
                 [req.body.nhash, req.cookies.username],
                 (err, result, fields) => {
                     if (err) throw err
@@ -652,10 +651,10 @@ app.post('/change_pw/', function (req, res) {
     }
 })
 
-app.post('/timetable/', function (req, res) {
+app.post('/timetable/', function (req, res) {       // both timetable and edit_timetable retrieves the same data, implemented in sendTimetable()
     sendTimetable(req, res)
 })
-app.post('/edit_timetable/', function (req, res) {
+app.post('/edit_timetable/', function (req, res) {  // both timetable and edit_timetable retrieves the same data, implemented in sendTimetable()
     sendTimetable(req, res)
 })
 function sendTimetable(req, res) {
@@ -677,7 +676,7 @@ function sendTimetable(req, res) {
     function getEvents(err, result, fields) {
         if (err) throw err
 
-        var eventList = []
+        var eventList = [] // the list of events of the user
         for (var i = 0; i < result.length; i++) {
             eventList.push({
                 id: result[i].id,
@@ -695,7 +694,7 @@ function sendTimetable(req, res) {
     }
 }
 
-app.delete('/edit_timetable/', function (req, res) {
+app.delete('/edit_timetable/', function (req, res) { // a delete request to delete an event
     con.query('SELECT uid FROM user_info WHERE uname = ? AND a_password = ? AND verified = 1',
         [req.cookies.username, req.cookies.pwhash], checkCookie)
 

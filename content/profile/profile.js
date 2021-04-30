@@ -27,7 +27,7 @@ function onerror() {
     window.location.href = "/"
 }
 
-function displayInfo() {
+function displayInfo() { // display user profile
     document.getElementById("uid").innerHTML = uId;
     document.getElementById("uname").innerHTML = uName;
     document.getElementById("uemail").innerHTML = uEmail;

@@ -25,7 +25,7 @@ function onerror() {
 	window.location.href = "/"
 }
 
-function displayGroupList() {
+function displayGroupList() { // display group list
 	for (i = 0; i < groupList.length; i++) {
 		var Div = document.createElement("div");
 		Div.className = "w-100 justify-content-between";

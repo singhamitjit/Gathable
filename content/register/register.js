@@ -1,8 +1,3 @@
-/*html imports:
-    - Ajax
-    - jsSHA
-    - "function/account.js"
-*/
 $('#register').click(() => {
 
     var userId = $('#username').val()
@@ -19,13 +14,13 @@ $('#register').click(() => {
  
     msg = checkUserId(userId)
     if (msg != "") {
-        alert(msg) // here I use alert for debugging only, it's ugly so we should change the display method later
+        alert(msg) // error message due to invalid username format
         return
     }
 
     msg = checkPassword(password)
     if (msg != "") {
-        alert(msg)
+        alert(msg) // error message due to invalid password format
         return
     }
 
